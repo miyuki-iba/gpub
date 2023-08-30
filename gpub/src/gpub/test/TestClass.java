@@ -19,6 +19,7 @@ public class TestClass {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		System.out.println("•ÛŒìƒuƒ‰ƒ“ƒ`‚Ö‚ÌEGit‚©‚ç‚ÌƒRƒ~ƒbƒg");
+		System.out.println("ä¿è­·ãƒ–ãƒ©ãƒ³ãƒã¸ã®EGitã‹ã‚‰ã®ã‚³ãƒŸãƒƒãƒˆ");
+		System.out.print("ä¿è­·ãƒ–ãƒ©ãƒ³ãƒã«ãƒ—ãƒ«");
 	}
 }
