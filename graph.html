@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<script type="text/javascript">
+<!--
+
+  // 標準背景色(n%：色)
+  var def_color = {120:"#77AA77", 100:"#FFAAAA", 50:"#CCBBFF", 0:"#BBFFBB"};
+  // 基準値：幅
+  var BASE_WIDTH = 300;
+  // 基準値：高さ
+  var BASE_HEIGHT = 200;
+
+  function drawMeter(canTag, valTag, maxTag, color) {
+    if (color == null || color == undefined) color = def_color;
+    var max = document.getElementById(valTag).value;
+    var val = document.getElementById(maxTag).value;
+    var p = parseInt(val / max * 10) / 10;
+    if (max == 0 || val == 0) p = 0;
+    var i = 0;
+    var canvas = document.getElementById(canTag);
+    var scaleX = canvas.width / BASE_WIDTH;
+    var scaleY = canvas.height/ BASE_HEIGHT;
+    canvas.getContext("2d").scale(scaleX, scaleY);
+    var anime = function() {
+      draw(canvas, i, color);
+      if (i >= p) return;
+      var step = 0.01;
+      i += step;
+      requestAnimationFrame(anime);
+    };
+    
+    anime();
+  }
+  
+  function draw(canvas, p, color) {
+    var fillColor = color["0"];
+    var h = p * 100;
+
+    // 背景色の設定
+    for (c in color) {
+        if (c == "0") continue;
+        if (h > parseInt(c)) fillColor = color[c];
+    }
+
+    var width = BASE_WIDTH;
+    var height = BASE_HEIGHT;
+    var ct = canvas.getContext("2d");
+    var x = width / 2;             // 円中心のX座標
+    var y = height + (height /4);  // 円中心のY座標
+    var rad = height + (height / 10); // 半径
+
+    // クリア
+    ct.clearRect(0, 0, width, height);
+
+    ct.lineWidth = 2;
+    ct.fillStyle = "#000000";
+    ct.strokeStyle = "#000000";
+
+    // 枠の描画
+    ct.beginPath();
+    
+    var angleA = 230 * Math.PI / 180;
+    var angleB = 310 * Math.PI / 180;
+    
+    ct.arc(x, y, rad, angleA, angleB, false);
+    ct.arc(x, y, rad - (height * 0.5), angleB, angleA, true);
+    ct.closePath();
+    ct.stroke();
+    // 塗りつぶし
+    ct.fillStyle = fillColor;
+    ct.fill();
+
+    ct.strokeStyle = "#0000FF";
+    ct.fillStyle = "#0000FF";
+    ct.lineWidth = 5;
+
+    // 0位置
+    ct.beginPath();
+    var angle = 235 * Math.PI / 180;
+    ct.arc(x, y, height, angle, angle, false);
+    ct.arc(x, y, height-20, angle, angle, false);
+    ct.closePath();
+    ct.stroke();
+    // 50位置
+    ct.beginPath();
+    angle = 270 * Math.PI / 180;
+    ct.arc(x, y, height, angle, angle, false);
+    ct.arc(x, y, height-20, angle, angle, false);
+    ct.closePath();
+    ct.stroke();
+    // 100位置
+    ct.beginPath();
+    angle = 305 * Math.PI / 180;
+    ct.arc(x, y, height, angle, angle, false);
+    ct.arc(x, y, height-20, angle, angle, false);
+    ct.closePath();
+    ct.stroke();
+
+    // 文字
+    ct.font = (x/10) + "px 'Meiryo UI'";
+    ct.fillStyle = "#000000";
+    ct.fillText((Math.round(p * 100)) + "%", x - (x/10), x/10);
+    
+    var s = 70 * p;
+
+    ct.strokeStyle = "#FF0000";
+    ct.fillStyle = "FF0000";
+    ct.lineWidth = 3;
+
+    // 中線
+    ct.beginPath();
+    angle = (235 + s) * Math.PI / 180;
+    ct.arc(x, y, height-10, angle, angle, false);
+    ct.arc(x, y, 0, angle, angle, false);
+    ct.closePath();
+    ct.stroke();
+
+  }
+
+  function changeSize(canTag) {
+  
+    var canvas = document.getElementById(canTag);
+    var win = window;
+    canvas.width = win.innerWidth - 20;
+    canvas.height = win.innerHeight - 100;
+    drawMeter(canTag, 'yo', 'ji');
+  
+  }
+
+  window.onresize = function() {changeSize('canvas');};
+
+// -->
+</script>
+</head>
+<body onload="changeSize('canvas');">
+<form id="form1" name="form1">
+  予算：<input id="yo" name="yo" type="text" value="200"/>&nbsp;
+  実績:<input id="ji" name="ji" type="text" value="100"/>&nbsp;
+  <input type="button" value="実行" onclick="changeSize('canvas');"/><br/>
+  <canvas id="canvas" width="300" height="200" style="border:solid 1px #BBBBBB;min-width:300px;min-height:200px;"></canvas><br/>
+</form>
+</body>
+</html>
